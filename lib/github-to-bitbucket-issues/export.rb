@@ -79,11 +79,11 @@ module GTBI
     end
 
     def downloader(type)
-      Object.const_get("GTBI::Downloaders::#{type.capitalize}")
+      Object.const_get("GTBI").const_get("Downloaders").const_get(type.capitalize)
     end
 
     def formatter(type)
-      Object.const_get("GTBI::Formatters::#{type.capitalize}")
+      Object.const_get("GTBI").const_get("Formatters").const_get(type.capitalize)
     end
 
     def generate_archive
