@@ -1,9 +1,10 @@
-Export issues from a Github repo to a Bitbucket one
+Export issues from a Github repository to the
+(https://confluence.atlassian.com/display/BITBUCKET/Export+or+Import+Issue+Data)[Bitbucket
+Issue Data Format]
 
-Usage:
-Modify example.config.yml and rename it to config.yml, then:
+## Usage
 
 ```
 bundle install
-bundle exec ruby cli.rb githubuser/repo bitbucketuser/repo
+bundle exec ruby cli.rb githubuser/repo username password exportfilename.zip
 ```
