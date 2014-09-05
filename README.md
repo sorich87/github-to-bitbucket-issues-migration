@@ -1,4 +1,4 @@
-Export issues from a Github repository to the[Bitbucket
+Export issues from a Github repository to the [Bitbucket
 Issue Data Format](https://confluence.atlassian.com/display/BITBUCKET/Export+or+Import+Issue+Data)
 
 ## Usage
