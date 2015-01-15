@@ -24,6 +24,7 @@ module GTBI
       })
       @repository = options[:repository]
       @filename = options[:filename]
+      @skip_pull_requests = options.has_option? :prskip
       @issues = []
       @comments = []
       @milestones = []
@@ -58,9 +59,11 @@ module GTBI
     private
 
     def download_issues
-      %w(open closed).each do |state|
-        @issues += download_all_of("issue", {:state => state})
-      end
+      @issues = download_all_of(
+          "issue",
+          {:state => "all"},
+          {:skip_pull_requests => @skip_pull_requests}
+      )
     end
 
     def download_comments
@@ -71,11 +74,11 @@ module GTBI
       @milestones = download_all_of("milestone")
     end
 
-    def download_all_of(type, options = {})
-      items = downloader(type).new(@github_client, @repository, options).fetch
-      items.map do |item|
-        formatter(type).new(item).formatted
-      end
+    def download_all_of(type, download_options = {}, accept_options = {})
+      items = downloader(type).new(@github_client, @repository, download_options).fetch
+      formatter = formatter(type).new
+      items = items.select { |item| formatter.accept(item, accept_options) }
+      items.map { |item| formatter.format(item) }
     end
 
     def downloader(type)

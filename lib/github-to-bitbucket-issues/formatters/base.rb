@@ -1,8 +1,12 @@
 module GTBI
   module Formatters
     class Base
-      def initialize(raw)
-        @raw = raw
+      def format(item)
+        {}
+      end
+
+      def accept(item, options)
+        true
       end
     end
   end

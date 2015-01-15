@@ -1,14 +1,14 @@
 module GTBI
   module Formatters
     class Comment < Base
-      def formatted
+      def format(item)
         {
-          :content => @raw.body,
-          :created_on => @raw.created_at,
-          :id => @raw.id,
-          :issue => get_issue(@raw),
-          :updated_on => @raw.updated_at,
-          :user => @raw.user.login
+          :content => item.body,
+          :created_on => item.created_at,
+          :id => item.id,
+          :issue => get_issue(item),
+          :updated_on => item.updated_at,
+          :user => item.user.login
         }
       end
 
