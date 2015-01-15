@@ -1,9 +1,9 @@
 module GTBI
   module Formatters
     class Milestone < Base
-      def formatted
+      def format(item)
         {
-          :name => @raw.title
+          :name => item.title
         }
       end
     end

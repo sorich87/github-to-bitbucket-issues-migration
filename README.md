@@ -8,6 +8,7 @@ options:
  -username (-u)  Github login
  -password (-p)  Github password
  -filename (-o)  Output file name (default is ./export.zip) : default - export.zip
+ -prskip         Skip exporting pull requests
  -help (-h)      Show help
 ```
 

@@ -1,25 +1,29 @@
 module GTBI
   module Formatters
     class Issue < Base
-      def formatted
+      def format(item)
         {
-          :assignee => get_assignee(@raw),
+          :assignee => get_assignee(item),
           :component => nil,
-          :content => @raw.body || " ",
-          :content_updated_on => @raw.updated_at,
-          :created_on => @raw.updated_at,
-          :edited_on => @raw.updated_at,
-          :id => @raw.number,
-          :kind => get_kind(@raw),
-          :milestone => get_milestone(@raw),
-          :priority => get_priority(@raw),
-          :reporter => @raw.user.login,
-          :status => get_status(@raw),
-          :title => @raw.title,
-          :updated_on => @raw.updated_at,
+          :content => item.body || " ",
+          :content_updated_on => item.updated_at,
+          :created_on => item.updated_at,
+          :edited_on => item.updated_at,
+          :id => item.number,
+          :kind => get_kind(item),
+          :milestone => get_milestone(item),
+          :priority => get_priority(item),
+          :reporter => item.user.login,
+          :status => get_status(item),
+          :title => item.title,
+          :updated_on => item.updated_at,
           :version => nil,
           :watchers => []
         }
+      end
+
+      def accept(issue, options)
+        !options[:skip_pull_requests] || issue.pull_request.nil? || issue.pull_request.patch_url.nil?
       end
 
       private
@@ -64,10 +68,10 @@ module GTBI
 
       def get_milestone(issue)
         if issue.milestone
-          milestone = issue.milestone.title
+          issue.milestone.title
+        else
+          nil
         end
-
-        milestone
       end
     end
   end

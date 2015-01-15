@@ -6,6 +6,7 @@ options = ArgsParser.parse ARGV do
   arg :username, 'Github login', :alias => :u
   arg :password, 'Github password', :alias => :p
   arg :filename, 'Output file name (default is ./export.zip)', :alias => :o, :default => 'export.zip'
+  arg :prskip, 'Skip exporting pull requests'
   arg :help, 'Show help', :alias => :h
 
   validate :repository, "Invalid repository path" do |r|
