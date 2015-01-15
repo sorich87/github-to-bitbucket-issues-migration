@@ -1,5 +1,5 @@
-Export issues from a Github repository to the [Bitbucket
-Issue Data Format](https://confluence.atlassian.com/display/BITBUCKET/Export+or+Import+Issue+Data)
+Export issues from a Github repository to the
+[Bitbucket Issue Data Format](https://confluence.atlassian.com/display/BITBUCKET/Export+or+Import+Issue+Data)
 
 ## CLI Options
 ```
@@ -15,5 +15,5 @@ options:
 
 ```
 bundle install
-bundle exec ruby cli.rb --repository user/repo --username user --password *** --filename out.zip
+bundle exec ruby cli.rb -repository user/repo -username user -password *** -filename out.zip
 ```
