@@ -9,6 +9,7 @@ require_relative 'formatters/milestone'
 require_relative 'downloaders/base'
 require_relative 'downloaders/issue'
 require_relative 'downloaders/comment'
+require_relative 'downloaders/org_repository'
 require_relative 'downloaders/milestone'
 
 module GTBI
@@ -34,6 +35,7 @@ module GTBI
     def generate
       repos = if @organization then download_organization_repos else [@repository] end
       repos.each do |repo|
+        puts "Fetch #{repo}"
         @repository = repo
         @filename = repo.gsub('/','_') + '.zip'
         download_issues
@@ -63,13 +65,16 @@ module GTBI
     end
 
     def download_organization_repos
-      #TODO
-      []
+      repos = downloader("orgrepository").new(@github_client, @organization, {}).fetch
+      repos.map do |item|
+        "#{@organization}/#{item.name}"
+      end
     end
 
     private
 
     def download_issues
+      @issues = []
       %w(open closed).each do |state|
         @issues += download_all_of("issue", {:state => state})
       end
@@ -99,7 +104,7 @@ module GTBI
     end
 
     def generate_archive
-      Zip::ZipFile.open(@filename, Zip::ZipFile::CREATE) do |zipfile|
+      Zip::File.open(@filename, Zip::File::CREATE) do |zipfile|
         zipfile.get_output_stream("db-1.0.json") do |f|
           f.puts to_json
         end
