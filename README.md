@@ -10,9 +10,13 @@ bundle install
 And then: 
 ```
   ruby cli.rb -u username -p password -r myrepo -o issues.zip
-  or
+```
+ or:
+```
   ruby cli.rb -t token_here --organization your_org
-
+```
+Available options
+```
     -t, --access_token [ARG]         Github access token
     -u, --username [ARG]             Github username
     -p, --password [ARG]             Github password
