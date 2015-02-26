@@ -2,14 +2,14 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.7)
-    backports (3.1.1)
+    backports (3.6.4)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
-    json_pure (1.7.7)
+    json_pure (1.8.2)
     multipart-post (2.0.0)
     octokit (3.8.0)
       sawyer (~> 0.6.0, >= 0.5.3)
-    rubyzip (0.9.9)
+    rubyzip (1.1.7)
     sawyer (0.6.0)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
