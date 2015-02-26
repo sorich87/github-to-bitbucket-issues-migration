@@ -16,24 +16,31 @@ module GTBI
     attr_reader :issues, :comments, :milestones
 
     def initialize(options)
-      return unless options[:repository]
+      return if not options[:repository] and not options[:organization]
 
       @github_client = Octokit::Client.new({
         :login => options[:username],
-        :password => options[:password]
+        :password => options[:password],
+        :access_token => options[:access_token]
       })
       @repository = options[:repository]
       @filename = options[:filename]
+      @organization = options[:organization]
       @issues = []
       @comments = []
       @milestones = []
     end
 
     def generate
-      download_issues
-      download_comments
-      download_milestones
-      generate_archive
+      repos = if @organization then download_organization_repos else [@repository] end
+      repos.each do |repo|
+        @repository = repo
+        @filename = repo.gsub('/','_') + '.zip'
+        download_issues
+        download_comments
+        download_milestones
+        generate_archive
+      end
     end
 
     def to_json
@@ -53,6 +60,11 @@ module GTBI
         :components => [],
         :versions => []
       })
+    end
+
+    def download_organization_repos
+      #TODO
+      []
     end
 
     private
