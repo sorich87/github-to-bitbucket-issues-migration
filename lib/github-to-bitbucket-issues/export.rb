@@ -116,7 +116,6 @@ module GTBI
     end
 
     def generate_archive
-      puts "  saving to: #{@filename}"
       Zip::File.open(@filename, Zip::File::CREATE) do |zipfile|
         zipfile.get_output_stream("db-1.0.json") do |f|
           f.puts to_json
