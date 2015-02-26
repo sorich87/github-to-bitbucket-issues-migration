@@ -36,12 +36,24 @@ module GTBI
       repos = if @organization then download_organization_repos else [@repository] end
       repos.each do |repo|
         puts "Fetch #{repo}"
+        @filename = if @default_filename then @default_filename else repo.gsub('/','_') + '.zip' end
         @repository = repo
-        @filename = @default_filename or repo.gsub('/','_') + '.zip'
-        download_issues
-        download_comments
-        download_milestones
-        generate_archive
+
+        # Skip existing files
+        if File.exists? @filename
+          puts "File #{@filename} already exists, skipping..."
+          next
+        end
+
+        # Get the data
+        begin
+          download_issues
+          download_comments
+          download_milestones
+          generate_archive
+        rescue Octokit::ClientError => e
+          puts "Error fetching data from github #{e.message}"
+        end
       end
     end
 
