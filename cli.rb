@@ -6,9 +6,9 @@ require 'optparse'
 options = {}
 opt_parse = OptionParser.new do |opts|
   opts.banner = "Usage: 
-  cli.rb -u username -p password -r myrepo -o issues.zip
+  ruby cli.rb -u username -p password -r myrepo -o issues.zip
 or
-  cli.rb -t token_here --organization your_org
+  ruby cli.rb -t token_here --organization your_org
   "
   opts.on('-t [ARG]', '--access_token [ARG]', "Github access token") do |v|
     options[:access_token] = v
