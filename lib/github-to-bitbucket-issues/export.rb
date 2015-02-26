@@ -25,7 +25,7 @@ module GTBI
         :access_token => options[:access_token]
       })
       @repository = options[:repository]
-      @filename = options[:filename]
+      @default_filename = options[:filename]
       @organization = options[:organization]
       @issues = []
       @comments = []
@@ -37,7 +37,7 @@ module GTBI
       repos.each do |repo|
         puts "Fetch #{repo}"
         @repository = repo
-        @filename = repo.gsub('/','_') + '.zip'
+        @filename = @default_filename or repo.gsub('/','_') + '.zip'
         download_issues
         download_comments
         download_milestones
@@ -104,6 +104,7 @@ module GTBI
     end
 
     def generate_archive
+      puts "  saving to: #{@filename}"
       Zip::File.open(@filename, Zip::File::CREATE) do |zipfile|
         zipfile.get_output_stream("db-1.0.json") do |f|
           f.puts to_json
