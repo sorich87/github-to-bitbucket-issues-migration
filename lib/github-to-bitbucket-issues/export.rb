@@ -1,5 +1,5 @@
 require 'octokit'
-require 'zip/zip'
+require 'zip'
 require 'json'
 
 require_relative 'formatters/base'
