@@ -1,6 +1,6 @@
 module GTBI
   module Downloaders
-    class Orgrepository < Base
+    class OrgRepository < Base
       def client_method
         "org_repos"
       end

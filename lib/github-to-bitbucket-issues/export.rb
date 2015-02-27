@@ -11,6 +11,7 @@ require_relative 'downloaders/issue'
 require_relative 'downloaders/comment'
 require_relative 'downloaders/org_repository'
 require_relative 'downloaders/milestone'
+require_relative 'core_ext/string'
 
 module GTBI
   class Export
@@ -77,7 +78,7 @@ module GTBI
     end
 
     def download_organization_repos
-      repos = downloader("orgrepository").new(@github_client, @organization, {}).fetch
+      repos = downloader("org_repository").new(@github_client, @organization, {}).fetch
       repos.map do |item|
         "#{@organization}/#{item.name}"
       end
@@ -108,11 +109,11 @@ module GTBI
     end
 
     def downloader(type)
-      Object.const_get("GTBI").const_get("Downloaders").const_get(type.capitalize)
+      Object.const_get("GTBI").const_get("Downloaders").const_get(type.camelize)
     end
 
     def formatter(type)
-      Object.const_get("GTBI").const_get("Formatters").const_get(type.capitalize)
+      Object.const_get("GTBI").const_get("Formatters").const_get(type.camelize)
     end
 
     def generate_archive
