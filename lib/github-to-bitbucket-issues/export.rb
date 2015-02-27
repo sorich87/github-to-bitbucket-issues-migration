@@ -1,5 +1,5 @@
 require 'octokit'
-require 'zip/zip'
+require 'zip'
 require 'json'
 
 require_relative 'formatters/base'
@@ -9,31 +9,53 @@ require_relative 'formatters/milestone'
 require_relative 'downloaders/base'
 require_relative 'downloaders/issue'
 require_relative 'downloaders/comment'
+require_relative 'downloaders/org_repository'
 require_relative 'downloaders/milestone'
+require_relative 'core_ext/string'
 
 module GTBI
   class Export
     attr_reader :issues, :comments, :milestones
 
     def initialize(options)
-      return unless options[:repository]
+      return if not options[:repository] and not options[:organization]
 
       @github_client = Octokit::Client.new({
         :login => options[:username],
-        :password => options[:password]
+        :password => options[:password],
+        :access_token => options[:access_token]
       })
       @repository = options[:repository]
-      @filename = options[:filename]
+      @default_filename = options[:filename]
+      @organization = options[:organization]
       @issues = []
       @comments = []
       @milestones = []
     end
 
     def generate
-      download_issues
-      download_comments
-      download_milestones
-      generate_archive
+      repos = if @organization then download_organization_repos else [@repository] end
+      repos.each do |repo|
+        puts "Fetch #{repo}"
+        @filename = if @default_filename then @default_filename else repo.gsub('/','_') + '.zip' end
+        @repository = repo
+
+        # Skip existing files
+        if File.exists? @filename
+          puts "File #{@filename} already exists, skipping..."
+          next
+        end
+
+        # Get the data
+        begin
+          download_issues
+          download_comments
+          download_milestones
+          generate_archive
+        rescue Octokit::ClientError => e
+          puts "Error fetching data from github #{e.message}"
+        end
+      end
     end
 
     def to_json
@@ -55,9 +77,17 @@ module GTBI
       })
     end
 
+    def download_organization_repos
+      repos = downloader("org_repository").new(@github_client, @organization, {}).fetch
+      repos.map do |item|
+        "#{@organization}/#{item.name}"
+      end
+    end
+
     private
 
     def download_issues
+      @issues = []
       %w(open closed).each do |state|
         @issues += download_all_of("issue", {:state => state})
       end
@@ -79,15 +109,15 @@ module GTBI
     end
 
     def downloader(type)
-      Object.const_get("GTBI").const_get("Downloaders").const_get(type.capitalize)
+      Object.const_get("GTBI").const_get("Downloaders").const_get(type.camelize)
     end
 
     def formatter(type)
-      Object.const_get("GTBI").const_get("Formatters").const_get(type.capitalize)
+      Object.const_get("GTBI").const_get("Formatters").const_get(type.camelize)
     end
 
     def generate_archive
-      Zip::ZipFile.open(@filename, Zip::ZipFile::CREATE) do |zipfile|
+      Zip::File.open(@filename, Zip::File::CREATE) do |zipfile|
         zipfile.get_output_stream("db-1.0.json") do |f|
           f.puts to_json
         end
