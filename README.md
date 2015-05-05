@@ -3,6 +3,10 @@ Issue Data Format](https://confluence.atlassian.com/display/BITBUCKET/Export+or+
 
 ## Usage
 
+Requirements:
+ * Ruby
+ * Bundler (http://bundler.io/)
+
 Make sure you have all dependencies:
 ```
 bundle install
