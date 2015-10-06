@@ -27,7 +27,6 @@ or
   end
   opts.on('-r [ARG]', '--repository', 'Export only one repository') do |v|
     options[:repository] = v
-    options[:filename] ||= v + '.zip'
   end
   opts.on('-h', '--help', 'Show this message') do |v|
     puts opts
