@@ -4,7 +4,7 @@ module GTBI
       def formatted
         {
           :assignee => get_assignee(@raw),
-          :component => nil,
+          :component => get_component(@raw),
           :content => @raw.body || " ",
           :content_updated_on => @raw.updated_at,
           :created_on => @raw.updated_at,
@@ -60,6 +60,13 @@ module GTBI
         else
           'major'
         end
+      end
+
+      # Fetching the component from the labels is limited is that only one component is allowed, so we take the first label
+      # Ignore labels common in GitHub that are used for other things, such as type and priority
+      KNOWN_LABELS = ['enhancement','proposal','task','bug','trivial','minor','critical','blocker','major']
+      def get_component(issue)
+        issue.labels.map { |a| a[:name] }.reject { |a| KNOWN_LABELS.include?(a) }[0]
       end
 
       def get_milestone(issue)
