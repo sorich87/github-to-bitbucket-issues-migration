@@ -92,7 +92,7 @@ module GTBI
       %w(open closed).each do |state|
         @issues += download_all_of("issue", {:state => state})
       end
-      @components += @issues.map { |a| a[:component] }.compact.uniq
+      @components += @issues.map { |a| a[:component] }.compact.uniq.map { |a| { :name => a } }
     end
 
     def download_comments
